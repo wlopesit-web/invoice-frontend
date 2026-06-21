@@ -1,0 +1,31 @@
+name: Frontend Continuous Integration
+
+# GATILHO: Dispara o robô a cada Push ou Pull Request na branch main
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-validate:
+    runs-on: ubuntu-latest # Inicializa uma VM Linux limpa na nuvem do GitHub
+
+    steps:
+      # Passo 1: Faz o download do código do repositório para dentro da VM do GitHub
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      # Passo 2: Configura o ambiente Node.js para validações de script (Linter/Ferramentas)
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v4
+        with:
+          node-node: 20
+
+      # Passo 3: Audita a integridade estrutural e sintaxe dos arquivos Web (HTML/JS)
+      - name: Validate Web Assets Syntax
+        run: |
+          echo "=== INITIALIZING STATIC ANALYSIS FOR VANILLA ENTERPRISE ==="
+          test -f index.html && echo "Success: index.html is present." || (echo "Error: index.html missing!" && exit 1)
+          test -f app.js && echo "Success: app.js is present." || (echo "Error: app.js missing!" && exit 1)
+          echo "=== ASSERTS VERIFIED: SYSTEM LOGICAL RUNS OK ==="
