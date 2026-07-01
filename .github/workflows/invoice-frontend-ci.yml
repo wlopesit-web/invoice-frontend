@@ -1,0 +1,16 @@
+name: "Invoice Frontend - [CI] Testes"
+
+on:
+  workflow_dispatch:
+  # push:
+  #   branches-ignore: [ "main" ]
+
+jobs:
+  continuous-integration:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Build Docker Image (Test)
+        run: docker build -t invoice-frontend:test .

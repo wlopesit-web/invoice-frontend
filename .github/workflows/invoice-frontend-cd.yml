@@ -1,0 +1,44 @@
+name: "Invoice Frontend - [CD] Deploy"
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  continuous-deployment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }} # Certifique-se de ter essa secret ou mude para o seu usuário do docker
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/invoice-frontend:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/invoice-frontend:latest
+      #  Transfere o arquivo de deploy para a VM via SCP
+      - name: Copy deployment script to OCI VM
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.ORACLE_CLOUD_IP }}
+          username: opc
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "scripts/deploy-docker.sh"
+          target: "/home/opc/projetos/invoice-frontend/scripts" # Pasta exclusiva do front-end
+          strip_components: 1
+      - name: Executar Deploy na VM via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.ORACLE_CLOUD_IP }}
+          username: opc
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            # Executa o script de deploy que criamos abaixo passando a senha por parâmetro
+            bash scripts/deploy-docker.sh "${{ secrets.DOCKER_USERNAME }}" "${{ secrets.DOCKER_PASSWORD }}"
+
