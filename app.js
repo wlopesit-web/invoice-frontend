@@ -379,7 +379,7 @@ async function loadHistoryFromDatabase() {
     console.log('[OCI-INITIALIZATION] Fetching invoice history from database (Port 8082)...');
     try {
         // Dispara o fetch para a sua nova rota exclusiva de historico
-        const response = await fetch('${DELETE_AND_HISTORY_URL}/all');
+        const response = await fetch(`${DELETE_AND_HISTORY_URL}/all`);
         if (!response.ok) throw new Error(`HTTP Error Status: ${response.status}`);
 
         const invoices = await response.json();
