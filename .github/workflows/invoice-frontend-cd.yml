@@ -40,5 +40,5 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             # Executa o script de deploy que criamos abaixo passando a senha por parâmetro
-            bash scripts/deploy-docker.sh "${{ secrets.DOCKER_USERNAME }}" "${{ secrets.DOCKER_PASSWORD }}"
+            ./scripts/deploy-docker.sh "${{ secrets.DOCKER_USERNAME }}" "${{ secrets.DOCKER_PASSWORD }}"
 
