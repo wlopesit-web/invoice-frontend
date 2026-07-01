@@ -7,8 +7,13 @@ set -e
 DOCKER_USER="$1"
 DOCKER_PASS="$2"
 
+# Se o GitHub Actions não enviou a IMAGE_TAG, usa 'latest' como segurança
+if [ -z "$IMAGE_TAG" ]; then
+  IMAGE_TAG="latest"
+fi
+
 CONTAINER_NAME="invoice-frontend-app"
-IMAGE_NAME="$DOCKER_USER/invoice-frontend:latest"
+IMAGE_NAME="$DOCKER_USER/invoice-frontend:$IMAGE_TAG"
 PORTA_VM=80 # Porta da VM que vai disparar para o navegador (mude se necessário)
 
 CONTAINER_NAME="invoice-frontend-app"
