@@ -56,15 +56,11 @@ const DOWNLOAD_URL = (currentHost === 'localhost' || currentHost === '127.0.0.1'
     : '/api/downloads';
 
 // Configuração delete single invoice
-const DELETE_URL = (currentHost === 'localhost' || currentHost === '127.0.0.1')
+const DELETE_AND_HISTORY_URL = (currentHost === 'localhost' || currentHost === '127.0.0.1')
     ? 'http://localhost:8082/api/history'
     : '/api/history';
 
 
-// Configuração show history invoices
-const HISTORY_SHOW_ALL = (currentHost === 'localhost' || currentHost === '127.0.0.1')
-    ? 'http://localhost:8082/api/history'
-    : '/api/history';
 
 // 3. GERENCIAMENTO DAS ABAS (TABS)
 tabSingle.addEventListener('click', () => {
@@ -304,7 +300,7 @@ monitorTbody.addEventListener('click', async (event) => {
 
         try {
 
-            const response = await fetch(`${DELETE_URL}/delete/${numeroNota}`, { method: 'DELETE' });
+            const response = await fetch(`${DELETE_AND_HISTORY_URL}/delete/${numeroNota}`, { method: 'DELETE' });
             if (response.ok) {
                 tr.style.transition = 'all 0.4s ease';
                 tr.style.opacity = '0';
@@ -352,7 +348,7 @@ document.getElementById('btn-delete-all').addEventListener('click', async () => 
             console.log(`[OCI-BATCH-DELETE] Purging invoice nº ${numeroNota}`);
 
             // Dispara o DELETE direto para a API REST do seu Consumidor (8082)
-            const response = await fetch(`${DELETE_URL}/delete/${numeroNota}`, {
+            const response = await fetch(`${DELETE_AND_HISTORY_URL}/delete/${numeroNota}`, {
                 method: 'DELETE'
             });
 
@@ -383,7 +379,7 @@ async function loadHistoryFromDatabase() {
     console.log('[OCI-INITIALIZATION] Fetching invoice history from database (Port 8082)...');
     try {
         // Dispara o fetch para a sua nova rota exclusiva de historico
-        const response = await fetch('${HISTORY_SHOW_ALL}/all');
+        const response = await fetch('${DELETE_AND_HISTORY_URL}/all');
         if (!response.ok) throw new Error(`HTTP Error Status: ${response.status}`);
 
         const invoices = await response.json();
@@ -449,7 +445,7 @@ monitorTbody.addEventListener('click', async (event) => {
 
         try {
             console.log(`[OCI-DELETE] Dispatching purge token for invoice nº ${numeroNota}`);
-            const response = await fetch(`${DELETE_URL}/delete/${numeroNota}`, { method: 'DELETE' });
+            const response = await fetch(`${DELETE_AND_HISTORY_URL}/delete/${numeroNota}`, { method: 'DELETE' });
 
             if (response.ok) {
                 tr.style.transition = 'all 0.4s ease';
@@ -538,7 +534,7 @@ document.getElementById('btn-delete-all').addEventListener('click', async () => 
     try {
         await Promise.all(Array.from(rows).map(async (row) => {
             const numeroNota = row.cells[0].innerText.trim();
-            const response = await fetch(`${DELETE_URL}/delete/${numeroNota}`, {
+            const response = await fetch(`${DELETE_AND_HISTORY_URL}/delete/${numeroNota}`, {
                 method: 'DELETE'
             });
 
