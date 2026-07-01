@@ -16,8 +16,8 @@ CONTAINER_NAME="invoice-frontend-app"
 IMAGE_NAME="$DOCKER_USER/invoice-frontend:$IMAGE_TAG"
 PORTA_VM=80 # Porta da VM que vai disparar para o navegador (mude se necessário)
 
-CONTAINER_NAME="invoice-frontend-app"
-IMAGE_NAME="$DOCKER_USER/invoice-frontend:latest"
+#CONTAINER_NAME="invoice-frontend-app"
+#IMAGE_NAME="$DOCKER_USER/invoice-frontend:latest"
 
 echo "=> Efetuando login no Docker Hub..."
 echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
