@@ -42,7 +42,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           envs: IMAGE_TAG
           script: |
-            chmod +x ./scripts/deploy-docker.sh
+            chmod +x /home/opc/projetos/invoice-frontend/scripts/deploy-docker.sh
             # Executa o script de deploy run
-            ./scripts/deploy-docker.sh "${{ vars.DOCKER_USERNAME }}" "${{ secrets.DOCKER_PASSWORD }}"
+            /home/opc/projetos/invoice-frontend/scripts/deploy-docker.sh "${{ vars.DOCKER_USERNAME }}" "${{ secrets.DOCKER_PASSWORD }}"
 
