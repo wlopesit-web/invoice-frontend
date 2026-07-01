@@ -36,13 +36,17 @@ jobs:
           strip_components: 1
       - name: Executar Deploy na VM via SSH
         uses: appleboy/ssh-action@v1.0.3
+        env:
+          IMAGE_TAG: ${{ github.sha }}  # Captura o hash do commit
         with:
           host: ${{ secrets.ORACLE_CLOUD_IP }}
           username: opc
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           envs: IMAGE_TAG
+          script_stop: true
           script: |
             chmod +x /home/opc/projetos/invoice-frontend/scripts/deploy-docker.sh
+            export IMAGE_TAG=$IMAGE_TAG
             # Executa o script de deploy run
             /home/opc/projetos/invoice-frontend/scripts/deploy-docker.sh "${{ vars.DOCKER_USERNAME }}" "${{ secrets.DOCKER_PASSWORD }}"
 
