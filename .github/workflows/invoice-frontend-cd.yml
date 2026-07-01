@@ -19,9 +19,11 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build and Push Docker Image
+        env:
+          IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/invoice-frontend:latest .
-          docker push ${{ secrets.DOCKER_USERNAME }}/invoice-frontend:latest
+          docker build -t ${{ vars.DOCKER_USERNAME }}/invoice-frontend:$IMAGE_TAG .
+          docker push ${{ vars.DOCKER_USERNAME }}/invoice-frontend:$IMAGE_TAG
       #  Transfere o arquivo de deploy para a VM via SCP
       - name: Copy deployment script to OCI VM
         uses: appleboy/scp-action@v0.1.7
@@ -38,7 +40,9 @@ jobs:
           host: ${{ secrets.ORACLE_CLOUD_IP }}
           username: opc
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          envs: IMAGE_TAG
           script: |
-            # Executa o script de deploy que criamos abaixo passando a senha por parâmetro
-            ./scripts/deploy-docker.sh "${{ secrets.DOCKER_USERNAME }}" "${{ secrets.DOCKER_PASSWORD }}"
+            chmod +x .scripts/deploy-docker.sh
+            # Executa o script de deploy run
+            ./scripts/deploy-docker.sh "${{ vars.DOCKER_USERNAME }}" "${{ secrets.DOCKER_PASSWORD }}"
 
