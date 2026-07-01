@@ -108,7 +108,7 @@ btnSubmit.addEventListener('click', async () => {
 
     } catch (error) {
         console.error('[OCI-PLATFORM] Erro de conexão:', error);
-        showToast('❌ Erro Crítico: Não foi possível conectar ao Produtor (Porta 8081). Verifique se o microsserviço está ligado!',true);
+        showToast('❌ Erro Crítico: Não foi possível conectar ao Produtor (Porta 8083). Verifique se o microsserviço está ligado!',true);
     } finally {
         // Restaura o estado original do botão de disparo
         btnSubmit.disabled = false;
