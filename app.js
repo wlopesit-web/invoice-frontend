@@ -42,7 +42,29 @@ const batchExample = [
 // VARIÁVEL DE ESTADO: CONTROLA QUAL ABA ESTÁ ATIVA
 let currentMode = 'single';
 //const BASE_URL = 'http://localhost:8083/api/invoices';
-const BASE_URL = '/api/invoices';
+//const BASE_URL = '/api/invoices';
+const currentHost = window.location.hostname;
+
+// Define a API base dinamicamente
+const BASE_URL = (currentHost === 'localhost' || currentHost === '127.0.0.1')
+    ? 'http://localhost:8083/api/invoices'  // Quando clica no ícone do Chrome no IntelliJ
+    : '/api/invoices';                     // Quando roda na VM da Oracle (Proxy Reverso)
+
+// Configuração download
+const DOWNLOAD_URL = (currentHost === 'localhost' || currentHost === '127.0.0.1')
+    ? 'http://localhost:8082/api/downloads'
+    : '/api/downloads';
+
+// Configuração delete single invoice
+const DELETE_URL = (currentHost === 'localhost' || currentHost === '127.0.0.1')
+    ? 'http://localhost:8082/api/history'
+    : '/api/history';
+
+
+// Configuração show history invoices
+const HISTORY_SHOW_ALL = (currentHost === 'localhost' || currentHost === '127.0.0.1')
+    ? 'http://localhost:8082/api/history'
+    : '/api/history';
 
 // 3. GERENCIAMENTO DAS ABAS (TABS)
 tabSingle.addEventListener('click', () => {
@@ -205,7 +227,7 @@ monitorTbody.addEventListener('click', async (event) => {
             console.log(`[OCI-DOWNLOAD] Requesting secure URL for invoice nº ${numeroNota}`);
 
             // 1. Faz o pedido da URL segura (PAR) para o seu Consumidor na porta 8082
-            const response = await fetch(`http://localhost:8082/api/downloads/url/${numeroNota}`);
+            const response = await fetch(`${DOWNLOAD_URL}/url/${numeroNota}`);
 
             const data = await response.json();
             const secureOciUrl = data.downloadUrl; // Link temporário gerado pelo SDK da Oracle Cloud
@@ -281,7 +303,8 @@ monitorTbody.addEventListener('click', async (event) => {
         btn.disabled = true;
 
         try {
-            const response = await fetch(`http://localhost:8082/api/history/delete/${numeroNota}`, { method: 'DELETE' });
+
+            const response = await fetch(`${DELETE_URL}/delete/${numeroNota}`, { method: 'DELETE' });
             if (response.ok) {
                 tr.style.transition = 'all 0.4s ease';
                 tr.style.opacity = '0';
@@ -329,7 +352,7 @@ document.getElementById('btn-delete-all').addEventListener('click', async () => 
             console.log(`[OCI-BATCH-DELETE] Purging invoice nº ${numeroNota}`);
 
             // Dispara o DELETE direto para a API REST do seu Consumidor (8082)
-            const response = await fetch(`http://localhost:8082/api/history/delete/${numeroNota}`, {
+            const response = await fetch(`${DELETE_URL}/delete/${numeroNota}`, {
                 method: 'DELETE'
             });
 
@@ -360,7 +383,7 @@ async function loadHistoryFromDatabase() {
     console.log('[OCI-INITIALIZATION] Fetching invoice history from database (Port 8082)...');
     try {
         // Dispara o fetch para a sua nova rota exclusiva de historico
-        const response = await fetch('http://localhost:8082/api/history/all');
+        const response = await fetch('${HISTORY_SHOW_ALL}/all');
         if (!response.ok) throw new Error(`HTTP Error Status: ${response.status}`);
 
         const invoices = await response.json();
@@ -426,7 +449,7 @@ monitorTbody.addEventListener('click', async (event) => {
 
         try {
             console.log(`[OCI-DELETE] Dispatching purge token for invoice nº ${numeroNota}`);
-            const response = await fetch(`http://localhost:8082/api/history/delete/${numeroNota}`, { method: 'DELETE' });
+            const response = await fetch(`${DELETE_URL}/delete/${numeroNota}`, { method: 'DELETE' });
 
             if (response.ok) {
                 tr.style.transition = 'all 0.4s ease';
@@ -468,7 +491,7 @@ document.getElementById('btn-download-all').addEventListener('click', async () =
     try {
         await Promise.all(Array.from(rows).map(async (row) => {
             const numeroNota = row.cells[0].innerText.trim();
-            const urlResponse = await fetch(`http://localhost:8082/api/downloads/url/${numeroNota}`);
+            const urlResponse = await fetch(`${DOWNLOAD_URL}/url/${numeroNota}`);
             const urlData = await urlResponse.json();
             const fileResponse = await fetch(urlData.downloadUrl);
             const fileText = await fileResponse.text();
@@ -515,7 +538,7 @@ document.getElementById('btn-delete-all').addEventListener('click', async () => 
     try {
         await Promise.all(Array.from(rows).map(async (row) => {
             const numeroNota = row.cells[0].innerText.trim();
-            const response = await fetch(`http://localhost:8082/api/history/delete/${numeroNota}`, {
+            const response = await fetch(`${DELETE_URL}/delete/${numeroNota}`, {
                 method: 'DELETE'
             });
 

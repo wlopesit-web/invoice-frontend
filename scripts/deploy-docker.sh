@@ -36,6 +36,9 @@ docker run -d \
   --restart always \
   -p $PORTA_VM:80 \
   -e BACKEND_URL="http://$BACKEND_API_IP:8083/api/" \
+  -e DOWNLOAD_SERVICE_URL="http://$BACKEND_API_IP:8082/api/downloads/" \
+  -e DELETE_URL="http://$BACKEND_API_IP:8082/api/history/" \
+  -e HISTORY_SHOW_ALL ="http://$BACKEND_API_IP:8082/api/history/" \
   $IMAGE_NAME
 
 echo "=> Deploy do Front-End concluído com sucesso!"
