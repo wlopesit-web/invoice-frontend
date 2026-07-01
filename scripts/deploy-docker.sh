@@ -6,6 +6,7 @@ set -e
 # Captura os parâmetros enviados pelo GitHub Actions
 DOCKER_USER="$1"
 DOCKER_PASS="$2"
+BACKEND_API_IP="$3"
 
 # Se o GitHub Actions não enviou a IMAGE_TAG, usa 'latest' como segurança
 if [ -z "$IMAGE_TAG" ]; then
@@ -34,6 +35,7 @@ docker run -d \
   --name $CONTAINER_NAME \
   --restart always \
   -p $PORTA_VM:80 \
+  -e BACKEND_URL="http://$BACKEND_API_IP:8083/api/" \
   $IMAGE_NAME
 
 echo "=> Deploy do Front-End concluído com sucesso!"

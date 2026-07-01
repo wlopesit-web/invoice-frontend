@@ -41,7 +41,8 @@ const batchExample = [
 
 // VARIÁVEL DE ESTADO: CONTROLA QUAL ABA ESTÁ ATIVA
 let currentMode = 'single';
-const BASE_URL = 'http://localhost:8083/api/invoices';
+//const BASE_URL = 'http://localhost:8083/api/invoices';
+const BASE_URL = '/api/invoices';
 
 // 3. GERENCIAMENTO DAS ABAS (TABS)
 tabSingle.addEventListener('click', () => {

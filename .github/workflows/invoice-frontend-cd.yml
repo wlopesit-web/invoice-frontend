@@ -48,5 +48,5 @@ jobs:
             chmod +x /home/opc/projetos/invoice-frontend/scripts/deploy-docker.sh
             export IMAGE_TAG=$IMAGE_TAG
             # Executa o script de deploy run
-            /home/opc/projetos/invoice-frontend/scripts/deploy-docker.sh "${{ vars.DOCKER_USERNAME }}" "${{ secrets.DOCKER_PASSWORD }}"
+            /home/opc/projetos/invoice-frontend/scripts/deploy-docker.sh "${{ vars.DOCKER_USERNAME }}" "${{ secrets.DOCKER_PASSWORD }}" "${{ secrets.ORACLE_CLOUD_IP }}"
 
